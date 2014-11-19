@@ -1,5 +1,5 @@
 {
-  "name": "@aqua/aquajs",
+  "name": "aquajs",
   "description": "Aqua JS Framework",
   "version": "0.0.9",
   "scripts": {
