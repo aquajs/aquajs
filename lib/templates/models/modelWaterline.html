@@ -1,0 +1,19 @@
+var Waterline = require('waterline');
+var {{ modelName }} = Waterline.Collection.extend({
+    adapter: '{{ adapter }}',
+    connection: '{{ connection }}',
+    schema:false,
+    identity:'{{ modelName|lower}}',
+    attributes: {
+        {%- for attribute in attributes -%}
+            {{ loop.key }}: {
+            type: '{{ attribute.type }}'
+        }
+            {%- if loop.length >1 and !loop.last -%}
+        ,
+            {%- endif -%}
+        {%- endfor -%}
+    }
+});
+
+module.exports= {{ modelName }};

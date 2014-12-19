@@ -1,0 +1,31 @@
+var persist = require('persist');
+var type = persist.type;
+var {{ modelName }} = persist.define("{{ modelName }}", {
+     attributes: {
+    {%- for attribute in attributes -%}
+        "{{ loop.key }}": {
+        "type":
+        {%- if attribute.type =="string" || attribute.type =="String" -%}
+            type.STRING
+        {%- elseif  attribute.type == "int" || attribute.type =="INTEGER"  -%}
+             type.INTEGER
+        {%- elseif  attribute.type =="real"  -%}
+            type.REAL
+        {%- elseif  attribute.type =="datetime"  -%}
+            type.DATETIME
+        {%- elseif  attribute.type =="blob"  -%}
+            type.BLOB
+        {%- elseif  attribute.type =="boolean"  -%}
+            type.BOOLEAN
+        {%- elseif  attribute.type =="json"  -%}
+        type.JSON
+        {%- endif -%}
+    }
+    {%- if loop.length >1 and !loop.last -%}
+         ,
+    {%- endif -%}
+        {%- endfor -%}
+    }
+});
+
+module.exports= {{ modelName }};
