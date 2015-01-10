@@ -1,54 +1,24 @@
-var dirPaths = require( process.cwd()+'/config/dirPaths');
+var dirPaths = require( process.cwd()+'/server/config/dirPaths');
 var {{ serviceImplName }} = {
 
 {%- for apiMethod in apiMethods -%}
 {%- for operation in apiMethod.operations -%}
-{%- for eachModel in modelList -%}
-{%- if operation.requestClass === eachModel  -%}
+
 {{ operation.nickname }}: function (req, res) {
-    var response,err = validateParams(req);
-    if (err) {
-    response= '{"Error":"There have been validation errors"}';
-    }else {
-    {%- if operation.httpMethod |upper == 'GET'  -%}
-        {%- if apiMethod.path.indexOf('{') > -1  -%}
-        $app.models.{{eachModel |lower}}.find()
-        .where({ {{(apiMethod.path.split('{')[1]).slice(0,-1)}}: req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}} })
-        .exec(function(err,result) {
-        res.send(result);
-        });
-        {% else %}
-        $app.models.{{eachModel |lower}}.find({}).exec(function(err,result) {
-        res.send(result);
-        });
-        {%- endif -%}
-    {%- endif -%}
-
-    {%- if operation.httpMethod |upper == 'POST'  -%}
-        $app.models.{{eachModel |lower}}.create(req.body).exec(function (err,result){
-        res.send(result);
-        });
-    {%- endif -%}
-
-    {%- if operation.httpMethod |upper == 'PUT'  -%}
-        $app.models.{{eachModel |lower}}
-        .update({ {{(apiMethod.path.split('{')[1]).slice(0,-1)}}: req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}} },req.body)
-        .exec(function (err,result){
-        res.send(result);
-        });
-    {%- endif -%}
-
-    {%- if operation.httpMethod |upper == 'DELETE'  -%}
-        $app.models.{{eachModel |lower}}.destroy()
-        .where({ {{(apiMethod.path.split('{')[1]).slice(0,-1)}}: req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}} })
-        .exec(function (err,result){
-        res.send(result);
-        });
-    {%- endif -%}
-    }
+try {
+    {%- for eachModel in modelList -%}
+          var {{eachModel}} = require($dirPaths.modelsDir+'{{eachModel}}');
+    {%- endfor -%}
+//code to call the pre and post methods of models
+return "success from sample API";
+} catch(e) {
+var html = '{{ operation.httpMethod }} : {{ operation.summary}} <br/><br/>' ;
+html += 'exports.<b>.{{ operation.nickname }}</b>.(req, res) {...}<br/><br/>';
+html += 'should be exposed from within <b>server/implementation/{{ controller }}.js</b><br/><br/>';
+html += 'you can access <b>app.models[...]</b> to manipulate your data...';
+return html;
 }
-{%- endif -%}
-{%- endfor -%}
+}
 {%- if loop.length >1 and !loop.last -%}
 ,
 {%- endif -%}
@@ -59,42 +29,6 @@ var {{ serviceImplName }} = {
 {%- endif -%}
 {%- endfor -%}
 
-};
-var validateParams = function(req, methodType) {
-        var params = Object.keys(req.params);
-        if( params.length >0) {
-        for(var pindex in params){
-        req.checkParams(params[pindex], 'Invalid url param').isAlphanumeric();
-        }
-        }
-        var queryParams =  Object.keys(req.query);
-        if(queryParams.length>0){
-        for(var qindex in queryParams){
-        req.checkQuery(queryParams[qindex], 'Invalid url param').isAlphanumeric();
-        }
-        }
-        {%- for apiMethod in apiMethods -%}
-        {%- for operation in apiMethod.operations -%}
-        if(methodType ==="{{ operation.httpMethod}}"){
-        {%- for parameter in operation.parameters -%}
-        {%- if parameter.dataType ==='string'  -%}
-        req.checkBody('{{parameter.name}}', 'Invalid body params').notEmpty().isAlphanumeric();
-        {%- endif -%}
-        {%- if parameter.dataType ==='int' -%}
-        req.checkBody('{{parameter.name}}', 'Invalid body params').notEmpty().isInt();
-        {%- endif -%}
-        {%- if parameter.dataType ==='date'  -%}
-        req.checkBody('{{parameter.name}}', 'Invalid body params').notEmpty().isDate();
-        {%- endif -%}
-        {%- if parameter.dataType ==='email'  -%}
-        req.checkBody('{{parameter.name}}', 'Invalid body params').notEmpty().isEmail();
-        {%- endif -%}
-        {%- endfor -%}
-        }
-        {%- endfor -%}
-        {%- endfor -%}
-        return req.validationErrors();
-    };
-
+}
 module.exports = {{ serviceImplName }};
 

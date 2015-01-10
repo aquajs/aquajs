@@ -2,6 +2,11 @@ var path = require('path');
 
 var {{ routerName }} = function(app){
 var {{ controllerName }} = require( path.join($dirPaths.controllersDir,'{{ controllerName }}'));
+//Home Router for pinging the load balancer Test #}
+app.get('/', function (req, res) {
+res.status(200).send('Ping {{ controllerName | replace('Controller', '') }} API');
+});
+
 {%- for apiMethod in apiMethods -%}
 {%- for operation in apiMethod.operations -%}
     {%- if operation.httpMethod |upper == 'GET'  -%}
@@ -11,14 +16,14 @@ var {{ controllerName }} = require( path.join($dirPaths.controllersDir,'{{ contr
     app.post('{{ apiMethod.path }}',  {{ controllerName }}.{{ operation.nickname }});
     {%- endif -%}
     {%- if operation.httpMethod |upper == 'PUT'  -%}
-    app.put('{{apiMethod.path}}', {{ controllerName }}.{{ operation.nickname }});
+    app.put('{{apiMethod.path}}/:id', {{ controllerName }}.{{ operation.nickname }});
     {%- endif -%}
     {%- if operation.httpMethod |upper == 'DELETE'  -%}
-    app.delete('{{apiMethod.path}}',{{ controllerName }}.{{ operation.nickname }});
+    app.delete('{{apiMethod.path}}/:id',{{ controllerName }}.{{ operation.nickname }});
     {%- endif -%}
 
 {%- endfor -%}
 {%- endfor -%}
-};
+}
 module.exports = {{ routerName }};
 
