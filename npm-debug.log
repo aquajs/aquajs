@@ -1,0 +1,21 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/bin/npm', 'version', 'patch', '-m', 'beta' ]
+2 info using npm@2.1.5
+3 info using node@v0.10.29
+4 error version Bad package.json data
+5 verbose type unexpected_token_string
+6 verbose stack SyntaxError: Unexpected string
+6 verbose stack     at Object.parse (native)
+6 verbose stack     at /usr/lib/node_modules/npm/lib/version.js:55:19
+6 verbose stack     at evalmachine.<anonymous>:271:14
+6 verbose stack     at /usr/lib/node_modules/npm/node_modules/graceful-fs/graceful-fs.js:102:5
+6 verbose stack     at Object.oncomplete (evalmachine.<anonymous>:107:15)
+7 verbose cwd /home/gse/workFolder/aquajs
+8 error Linux 2.6.32-431.17.1.el6.x86_64
+9 error argv "node" "/usr/bin/npm" "version" "patch" "-m" "beta"
+10 error node v0.10.29
+11 error npm  v2.1.5
+12 error Unexpected string
+13 error If you need help, you may report this error at:
+13 error     <http://github.com/npm/npm/issues>
+14 verbose exit [ 1, true ]
