@@ -28,7 +28,8 @@
     "uuid": "^2.0.1",
     "waterline": "^0.10.14",
     "persist": "latest",
-    "express-validator": "latest"
+    "express-validator": "latest",
+    "js-beautify": "latest"    
   },
   "devDependencies": {
     "mocha": "^2.0.1"
