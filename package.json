@@ -27,7 +27,8 @@
     "swagger-express": "^1.0.5",
     "uuid": "^2.0.1",
     "waterline": "^0.10.14",
-    "persist": "latest"
+    "persist": "latest",
+    "express-validator": "latest"
   },
   "devDependencies": {
     "mocha": "^2.0.1"
