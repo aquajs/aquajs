@@ -1,5 +1,5 @@
+
 var path = require('path');
-var aquaError = require('aquajs-error');
 var nodeUtilities = require(path.join('..','node_modules','aquajs','lib','nodeUtilities.js'));
 
 var validateParams = function(req, methodType) {
@@ -46,23 +46,24 @@ var {{ serviceImplName }} = {
 
 {%- if operation.requestClass === eachModel.id  -%}
 {{ operation.nickname }}: function (req, res) {
-nodeUtilities.checkConnection("{{eachModel.adapter}}");
+
 var response,err = validateParams(req);
 if (err) {
 response= '{"Error":"There have been validation errors"}';
 }else {
 
 {%- if eachModel.adapter === 'oracle'  -%}
+nodeUtilities.checkConnection("{{eachModel.adapter}}");
 var {{eachModel.id}} = require(path.join('..','models','{{eachModel.id}}'));
 {%- if operation.httpMethod |upper == 'GET'  -%}
 {%- if apiMethod.path.indexOf('{') > -1  -%}
 {{eachModel.id}}.getById($conn, [req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}}], function(err, result) {
-if(err){ throw new aquaError("Error running Persist method"); }
-res.send(result);
+if(err){ res.send("Error running Persist method"); }
+else{ res.send(result); }
 });
 {% else %}
 {{eachModel.id}}.using($conn).all(function(err, result) {
-if (err) { throw new aquaError("Error running Persist method"); }
+if (err) { res.send("Error running Persist method"); }
 res.send(result);
 });
 {%- endif -%}
@@ -70,24 +71,24 @@ res.send(result);
 {%- if operation.httpMethod |upper == 'POST'  -%}
 var newObj = new {{eachModel.id}}(req.body);
 newObj.save($conn, function(err, result) {
-if(err) { throw new aquaError("Error running Persist method"); }
-res.send(result);
+if(err) { res.send("Error running Persist method"); }
+else{ res.send(result); }
 });
 {%- endif -%}
 
 {%- if operation.httpMethod |upper == 'PUT'  -%}
 {{eachModel.id}}.update($conn, req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}}, req.body, function(err, result) {
-if (err) { throw new aquaError("Error running Persist method"); }
-res.send(result);
+if (err) { res.send("Error running Persist method"); }
+else{ res.send(result); }
 });
 {%- endif -%}
 
 {%- if operation.httpMethod |upper == 'DELETE'  -%}
 {{eachModel.id}}.getById($conn, [req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}}], function(err, {{eachModel.id}}1) {
-if (err) { throw new aquaError("Error running Persist method"); }
+if (err) { res.send("Error running Persist method"); }
 {{eachModel.id}}1.delete($conn, function(err, result) {
-if (err) { throw new aquaError("Error running Persist method"); }
-res.send(result);
+if (err) { res.send("Error running Persist method"); }
+else{ res.send(result); }
 });
 });
 {%- endif -%}
@@ -103,16 +104,16 @@ res.send(result);
 });
 {% else %}
 $app.models.{{eachModel.id |lower}}.find({}).exec(function(err,result) {
-if(err){ throw new aquaError("Error running waterline Query"); }
-res.send(result);
+if(err){ res.send("Error running waterline Query"); }
+else{ res.send(result); }
 });
 {%- endif -%}
 {%- endif -%}
 
 {%- if operation.httpMethod |upper == 'POST'  -%}
 $app.models.{{eachModel.id |lower}}.create(req.body).exec(function (err,result){
-if(err){ throw new aquaError("Error running waterline Query"); }
-res.send(result);
+if(err){ res.send("Error running waterline Query"); }
+else{ res.send(result); }
 });
 {%- endif -%}
 
@@ -120,8 +121,8 @@ res.send(result);
 $app.models.{{eachModel.id |lower}}
 .update({ {{(apiMethod.path.split('{')[1]).slice(0,-1)}}: req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}} },req.body)
 .exec(function (err,result){
-if(err){ throw new aquaError("Error running waterline Query"); }
-res.send(result);
+if(err){ res.send("Error running waterline Query"); }
+else{ res.send(result); }
 });
 {%- endif -%}
 
@@ -129,8 +130,8 @@ res.send(result);
 $app.models.{{eachModel.id |lower}}.destroy()
 .where({ {{(apiMethod.path.split('{')[1]).slice(0,-1)}}: req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}} })
 .exec(function (err,result){
-if(err){ throw new aquaError("Error running waterline Query"); }
-res.send(result);
+if(err){ res.send("Error running waterline Query"); }
+else{ res.send(result); }
 });
 {%- endif -%}
 
