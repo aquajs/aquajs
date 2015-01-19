@@ -24,7 +24,6 @@
     "express-validator": "^2.7.0",
     "js-beautify": "^1.5.4",
     "method-override": "^2.3.0",
-    "morgan": "^1.5.0",
     "persist": "latest",
     "swagger-express": "^1.0.5",
     "uuid": "^2.0.1",
