@@ -1,6 +1,7 @@
 
 var path = require('path');
-var nodeUtilities = require(path.join('..','node_modules','aquajs','lib','nodeUtilities.js'));
+var rek = require('rekuire');
+var nodeUtilities = rek(path.join('aquajs','lib','nodeUtilities.js'));
 
 var validateParams = function(req, methodType) {
 var params = Object.keys(req.params);

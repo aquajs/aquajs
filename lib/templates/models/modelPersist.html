@@ -20,9 +20,12 @@ type.BOOLEAN
 {%- elseif  attribute.type =="json"  -%}
 type.JSON
 {%- endif -%}
-, dbColumnName: '{{ (loop.key).replace("_","") |upper}}'
-{%- if loop.key =="id" -%}
-,primaryKey:"id"
+,
+{%- if attribute.primaryKey !==undefined -%}
+dbColumnName: 'ID'
+,primaryKey:"{{ loop.key }}"
+{% else %}
+dbColumnName: '{{ (loop.key).replace("_","") |upper}}'
 {%- endif -%}
 }
 
