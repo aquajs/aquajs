@@ -25,6 +25,7 @@
     "js-beautify": "^1.5.4",
     "method-override": "^2.3.0",
     "persist": "latest",
+    "rekuire": "latest",
     "swagger-express": "^1.0.5",
     "uuid": "^2.0.1",
     "waterline": "^0.10.14"

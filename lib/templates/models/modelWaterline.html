@@ -11,6 +11,9 @@ var {{ modelName }} = Waterline.Collection.extend({
             {%- if attribute.required !==undefined -%}
                 ,required: true
             {%- endif -%}
+            {%- if attribute.primaryKey !==undefined -%}
+                ,primaryKey: true
+            {%- endif -%}
             }
 
             {%- if loop.length >1 and !loop.last -%}
