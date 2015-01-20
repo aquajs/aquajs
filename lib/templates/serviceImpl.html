@@ -1,24 +1,147 @@
 
+var path = require('path');
+var rek = require('rekuire');
+var nodeUtilities = rek(path.join('aquajs','lib','nodeUtilities.js'));
+
+var validateParams = function(req, methodType) {
+var params = Object.keys(req.params);
+if( params.length >0) {
+for(var pindex in params){
+req.checkParams(params[pindex], 'Invalid url param').isAlphanumeric();
+}
+}
+var queryParams =  Object.keys(req.query);
+if(queryParams.length>0){
+for(var qindex in queryParams){
+req.checkQuery(queryParams[qindex], 'Invalid url param').isAlphanumeric();
+}
+}
+{%- for apiMethod in apiMethods -%}
+{%- for operation in apiMethod.operations -%}
+if(methodType ==="{{ operation.httpMethod}}"){
+{%- for parameter in operation.parameters -%}
+{%- if parameter.dataType ==='string'  -%}
+req.checkBody('{{parameter.name}}', 'Invalid body params').notEmpty().isAlphanumeric();
+{%- endif -%}
+{%- if parameter.dataType ==='int' -%}
+req.checkBody('{{parameter.name}}', 'Invalid body params').notEmpty().isInt();
+{%- endif -%}
+{%- if parameter.dataType ==='date'  -%}
+req.checkBody('{{parameter.name}}', 'Invalid body params').notEmpty().isDate();
+{%- endif -%}
+{%- if parameter.dataType ==='email'  -%}
+req.checkBody('{{parameter.name}}', 'Invalid body params').notEmpty().isEmail();
+{%- endif -%}
+{%- endfor -%}
+}
+{%- endfor -%}
+{%- endfor -%}
+return req.validationErrors();
+};
+
 var {{ serviceImplName }} = {
 
 {%- for apiMethod in apiMethods -%}
 {%- for operation in apiMethod.operations -%}
+{%- for eachModel in modelList -%}
 
+{%- if operation.requestClass === eachModel.id  -%}
 {{ operation.nickname }}: function (req, res) {
-try {
-    {%- for eachModel in modelList -%}
-          var {{eachModel}} = require($dirPaths.modelsDir+'{{eachModel}}');
-    {%- endfor -%}
-//code to call the pre and post methods of models
-return "success from sample API";
-} catch(e) {
-var html = '{{ operation.httpMethod }} : {{ operation.summary}} <br/><br/>' ;
-html += 'exports.<b>.{{ operation.nickname }}</b>.(req, res) {...}<br/><br/>';
-html += 'should be exposed from within <b>server/implementation/{{ controller }}.js</b><br/><br/>';
-html += 'you can access <b>app.models[...]</b> to manipulate your data...';
-return html;
+
+var response,err = validateParams(req);
+if (err) {
+response= '{"Error":"There have been validation errors"}';
+}else {
+
+{%- if eachModel.adapter === 'oracle'  -%}
+nodeUtilities.checkConnection("{{eachModel.adapter}}");
+var {{eachModel.id}} = require(path.join('..','models','{{eachModel.id}}'));
+{%- if operation.httpMethod |upper == 'GET'  -%}
+{%- if apiMethod.path.indexOf('{') > -1  -%}
+{{eachModel.id}}.getById($conn, [req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}}], function(err, result) {
+if(err){ res.send("Error running Persist method"); }
+else{ res.send(result); }
+});
+{% else %}
+{{eachModel.id}}.using($conn).all(function(err, result) {
+if (err) { res.send("Error running Persist method"); }
+res.send(result);
+});
+{%- endif -%}
+{%- endif -%}
+{%- if operation.httpMethod |upper == 'POST'  -%}
+var newObj = new {{eachModel.id}}(req.body);
+newObj.save($conn, function(err, result) {
+if(err) { res.send("Error running Persist method"); }
+else{ res.send(result); }
+});
+{%- endif -%}
+
+{%- if operation.httpMethod |upper == 'PUT'  -%}
+{{eachModel.id}}.update($conn, req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}}, req.body, function(err, result) {
+if (err) { res.send("Error running Persist method"); }
+else{ res.send(result); }
+});
+{%- endif -%}
+
+{%- if operation.httpMethod |upper == 'DELETE'  -%}
+{{eachModel.id}}.getById($conn, [req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}}], function(err, {{eachModel.id}}1) {
+if (err) { res.send("Error running Persist method"); }
+{{eachModel.id}}1.delete($conn, function(err, result) {
+if (err) { res.send("Error running Persist method"); }
+else{ res.send(result); }
+});
+});
+{%- endif -%}
+
+{% else %}
+
+{%- if operation.httpMethod |upper == 'GET'  -%}
+{%- if apiMethod.path.indexOf('{') > -1  -%}
+$app.models.{{eachModel.id |lower}}.find()
+.where({ {{(apiMethod.path.split('{')[1]).slice(0,-1)}}: req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}} })
+.exec(function(err,result) {
+res.send(result);
+});
+{% else %}
+$app.models.{{eachModel.id |lower}}.find({}).exec(function(err,result) {
+if(err){ res.send("Error running waterline Query"); }
+else{ res.send(result); }
+});
+{%- endif -%}
+{%- endif -%}
+
+{%- if operation.httpMethod |upper == 'POST'  -%}
+$app.models.{{eachModel.id |lower}}.create(req.body).exec(function (err,result){
+if(err){ res.send("Error running waterline Query"); }
+else{ res.send(result); }
+});
+{%- endif -%}
+
+{%- if operation.httpMethod |upper == 'PUT'  -%}
+$app.models.{{eachModel.id |lower}}
+.update({ {{(apiMethod.path.split('{')[1]).slice(0,-1)}}: req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}} },req.body)
+.exec(function (err,result){
+if(err){ res.send("Error running waterline Query"); }
+else{ res.send(result); }
+});
+{%- endif -%}
+
+{%- if operation.httpMethod |upper == 'DELETE'  -%}
+$app.models.{{eachModel.id |lower}}.destroy()
+.where({ {{(apiMethod.path.split('{')[1]).slice(0,-1)}}: req.params.{{(apiMethod.path.split('{')[1]).slice(0,-1)}} })
+.exec(function (err,result){
+if(err){ res.send("Error running waterline Query"); }
+else{ res.send(result); }
+});
+{%- endif -%}
+
+{%- endif -%}
+
 }
 }
+{%- endif -%}
+{%- endfor -%}
 {%- if loop.length >1 and !loop.last -%}
 ,
 {%- endif -%}
@@ -28,7 +151,6 @@ return html;
 ,
 {%- endif -%}
 {%- endfor -%}
+};
 
-}
 module.exports = {{ serviceImplName }};
-

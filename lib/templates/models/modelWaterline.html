@@ -8,7 +8,11 @@ var {{ modelName }} = Waterline.Collection.extend({
         {%- for attribute in attributes -%}
             {{ loop.key }}: {
             type: '{{ attribute.type }}'
-        }
+            {%- if attribute.required !==undefined -%}
+                ,required: true
+            {%- endif -%}
+            }
+
             {%- if loop.length >1 and !loop.last -%}
         ,
             {%- endif -%}
