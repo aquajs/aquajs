@@ -6,10 +6,10 @@ var wfFactory = require('aquajs-wf-runner').Factory;
 var AquaWorkFlow = require('aquajs-wf-runner').AquaWorkFlow;
   // get aqua workflow  object, this is the key object
   
-var wfConfig = require(dirPaths.configDir+'/workflow/config.json');  
+var wfConfig = require($dirPaths.configDir+'/workflow/config.json');  
   // should match with worker configurations
 
-wfConfig.workflowsDirectory = dirPaths.serverDir+"/workflows/{{ controllerName | replace('Controller', '') }}";
+wfConfig.workflowsDirectory = $dirPaths.serverDir+"/workflows/{{ controllerName | replace('Controller', '') }}";
 
 var wf = new AquaWorkFlow(wfConfig,wfFactory);  
   //create wf object and re-use everytime a request comes in
