@@ -1,7 +1,7 @@
 {
   "name": "aquajs",
   "description": "Aqua.js Microservice Framework",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "./lib",
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
     "js-beautify": "^1.5.4",
     "method-override": "^2.3.0",
     "persist": "latest",
-    "rekuire": "latest",
+    "rekuire": "^0.1.9",
     "swagger-express": "^1.0.5",
     "uuid": "^2.0.1",
     "waterline": "^0.10.14"
