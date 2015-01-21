@@ -1,7 +1,7 @@
 {
   "name": "aquajs",
   "description": "Aqua.js Microservice Framework",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "main": "./lib",
   "repository": {
     "type": "git",
@@ -32,5 +32,8 @@
   },
   "devDependencies": {
     "mocha": "^2.0.1"
+  },
+  "publishConfig": {
+    "registry": "http://nexus.corp.equinix.com/nexus/content/repositories/Equinix-AquaJS-Release/"
   }
 }
