@@ -20,7 +20,8 @@ var {{ controllerName }} = {
 
         {{ operation.nickname }}: function (req, res) {
           try {
-              wf.startJob("{{ controllerName | replace('Controller', '') }}.{{ operation.nickname }}",{ body:req.params, url: req.url }, 
+              wf.startJob("{{ controllerName | replace('Controller', '') }}.{{ operation.nickname }}",{  body: req.body, params: req.params,
+			     headers: req.headers, query: req.query,url: req.url }
               function(err, obj) {
                 // Workflow Completed
 

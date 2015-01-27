@@ -9,10 +9,13 @@ var {{ methodDef.nickname }} =
             retry: 1,
             body: function (job, cb) {
                 try {
-                    {%- if host -%}
-                        var client = restify.createJsonClient({ url: 'http://{{ host }}' });
-                            // The Microservice URL was specified in the Schema ( "host" )...
-
+				        {%- if rootHost != '' || methodDef.host -%}
+						    {%- if  methodDef.host '-%}
+								 var client = restify.createJsonClient({ url: 'http://{{ methodDef.host }}' });
+							{%- elseif  rootHost != '' -%}
+								 var client = restify.createJsonClient({ url: 'http://{{ rootHost }}' });
+							{%- endif -%}
+                         // The Microservice URL was specified in the Schema ( "host" )...
                         return client.get(job.url, function(err, req, res, obj) {
                             // Call the Microservice and act on the response...
 
