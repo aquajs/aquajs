@@ -1,22 +1,19 @@
 var {{ serviceImplName }} =  require("../impls/{{ serviceImplName }}");
+
 var {{ controllerName }} = {
-
-{%- for apiMethod in apiMethods -%}
-{%- for operation in apiMethod.operations -%}
-
-{{ operation.nickname }}: function (req, res) {
-{{ serviceImplName }}.{{ operation.nickname }}(req, res);
-}
-{%- if loop.length >1 and !loop.last -%}
-,
-{%- endif -%}
-
-{%- endfor -%}
-{%- if loop.length >1 and !loop.last -%}
-,
-{%- endif -%}
-{%- endfor -%}
-
+  {%- for apiMethod in apiMethods -%}
+    {%- for operation in apiMethod.operations -%}
+      {{ operation.nickname }}: function (req, res) {
+        {{ serviceImplName }}.{{ operation.nickname }}(req, res);
+      }
+      {%- if loop.length >1 and !loop.last -%}
+        ,
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if loop.length >1 and !loop.last -%}
+      ,
+    {%- endif -%}
+  {%- endfor -%}
 };
 
 module.exports = {{ controllerName }};
