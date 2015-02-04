@@ -8,41 +8,28 @@ var {{ methodDef.nickname }} = {
       timeout: 8,
       retry: 1,
       body: function (job, cb) {
-              try {
-                {%- if rootHost != '' || methodDef.host -%}
-                  {%- if methodDef.host '-%}
-                    var client = restify.createJsonClient({ url: 'http://{{ methodDef.host }}' });
-                  {%- elseif rootHost != '' -%}
-                    var client = restify.createJsonClient({ url: 'http://{{ rootHost }}' });
-                  {%- endif -%}
-                  // The Microservice URL was specified in the Schema ( "host" )...
+        try {
+          var client = restify.createJsonClient({ url: 'http://{{ methodDef.host }}' });
 
-                  return client.get(job.url, function(err, req, res, obj) {
-                    // Call the Microservice and act on the response...
-                    if(err) {
-                      return cb(err.name + ': ' + err.body.message);
-                    } else {
-                      job.result = obj;
-                      // This is where the response payload is stored...
+          // call service
+          return client.get(job.url, function(err, req, res, obj) {
+            if(err) {
+              return cb(err.name + ': ' + err.body.message);
+            }
 
-                      cb(null,'{{ methodDef.nickname }}: {{ methodDef.summary }}' + ': Workflow Succeeded...');
-                      // This is just a message to track the Workflow...
-                    }
-                  });
-                {%- endif -%}
-                {%- if !host -%}
-                  job.result = { {{ methodDef.nickname }}: "Workflow data access needs to be implemented..."};
-                    return cb(null,'{{ methodDef.nickname }}: {{ methodDef.summary }}' + ': Workflow data access needs to be implemented...');
-                {%- endif -%}
-              } catch(ex) {
-                console.log(ex);
-              }
+            job.result = obj;
+            // callback message to track the workflow...
+            cb(null,'{{ methodDef.nickname }}: {{ methodDef.summary }}' + ': Workflow Succeeded...');
+          });
+        } catch(ex) {
+          console.log(ex);
+        }
       },
       fallback: function (err, job, cb) {
-                  console.log(err);
-                  job.result = '{{ methodDef.nickname }}: {{ methodDef.summary }}' + ': Workflow failed: ' + err;
-                  cb("Error");
-                }
+        console.log(err);
+        job.result = '{{ methodDef.nickname }}: {{ methodDef.summary }}' + ': Workflow failed: ' + err;
+        cb("Error");
+      }
     }
   ],
   timeout: 9,
