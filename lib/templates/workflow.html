@@ -9,9 +9,9 @@ var {{ methodDef.nickname }} = {
       retry: 1,
       body: function (job, cb) {
               try {
-                {%- if rootHost != '' || methodDef.host -%}
-                  {%- if methodDef.host '-%}
-                    var client = restify.createJsonClient({ url: 'http://{{ methodDef.host }}' });
+                {%- if rootHost != '' && rootHost != host -%}
+                  {%- if host '-%}
+                    var client = restify.createJsonClient({ url: 'http://{{ host }}' });
                   {%- elseif rootHost != '' -%}
                     var client = restify.createJsonClient({ url: 'http://{{ rootHost }}' });
                   {%- endif -%}
