@@ -9,11 +9,6 @@ var {{ methodDef.nickname }} = {
       retry: 1,
       body: function (job, cb) {
         try {
-          {%- if !methodDef.host -%}
-            job.result = { {{ methodDef.nickname }}: "Workflow schema must specify a host url"};
-            return cb(null,'{{ methodDef.nickname }}: {{ methodDef.summary }}' + ': Workflow scheme must specify a host url');
-          {%- endif -%}
-
           var client = restify.createJsonClient({ url: 'http://{{ methodDef.host }}' });
 
           // call service
