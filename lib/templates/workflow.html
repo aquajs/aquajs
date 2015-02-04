@@ -9,28 +9,28 @@ var {{ methodDef.nickname }} = {
       retry: 1,
       body: function (job, cb) {
               try {
-                {%- if rootHost != '' && rootHost != host -%}
-                  {%- if host '-%}
-                    var client = restify.createJsonClient({ url: 'http://{{ host }}' });
-                  {%- elseif rootHost != '' -%}
-                    var client = restify.createJsonClient({ url: 'http://{{ rootHost }}' });
-                  {%- endif -%}
-                  // The Microservice URL was specified in the Schema ( "host" )...
+                  {%- if rootHost != '' -%}
+                    {%- if methodDef.host -%}
+                      var client = restify.createJsonClient({ url: 'http://{{ methodDef.host }}' });
+                    {%- else -%}
+                      var client = restify.createJsonClient({ url: 'http://{{ rootHost }}' });
+                    {%- endif -%}
+                    // The Microservice URL was specified in the Schema ( "host" )...
 
-                  return client.get(job.url, function(err, req, res, obj) {
-                    // Call the Microservice and act on the response...
-                    if(err) {
-                      return cb(err.name + ': ' + err.body.message);
-                    } else {
-                      job.result = obj;
-                      // This is where the response payload is stored...
+                    return client.get(job.url, function(err, req, res, obj) {
+                      // Call the Microservice and act on the response...
+                      if(err) {
+                        return cb(err.name + ': ' + err.body.message);
+                      } else {
+                        job.result = obj;
+                        // This is where the response payload is stored...
 
-                      cb(null,'{{ methodDef.nickname }}: {{ methodDef.summary }}' + ': Workflow Succeeded...');
-                      // This is just a message to track the Workflow...
-                    }
-                  });
+                        cb(null,'{{ methodDef.nickname }}: {{ methodDef.summary }}' + ': Workflow Succeeded...');
+                        // This is just a message to track the Workflow...
+                      }
+                    });
                 {%- endif -%}
-                {%- if !host -%}
+                {%- if !methodDef.host -%}
                   job.result = { {{ methodDef.nickname }}: "Workflow data access needs to be implemented..."};
                     return cb(null,'{{ methodDef.nickname }}: {{ methodDef.summary }}' + ': Workflow data access needs to be implemented...');
                 {%- endif -%}
