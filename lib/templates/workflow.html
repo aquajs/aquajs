@@ -1,33 +1,45 @@
 var restify = require('restify');
+var path = require('path');
+var wf_const = require(path.join($dirPaths.serverDir, 'constants', 'wf_constants'));
+var aquaError = require('aquajs-error');
 
 var {{ methodDef.nickname }} = {
   name: '{{ methodDef.nickname }}',
   chain: [
     {
       name: '{{ methodDef.summary }}',
-      timeout: 8,
       retry: 1,
       body: function (job, cb) {
         try {
-          var client = restify.createJsonClient({ url: 'http://{{ methodDef.host }}' });
+          var client = restify.createJsonClient({
+            url: wf_const.ECX_ROOT_HOST + ':' + wf_const.ECX_PORT, headers: {'http_x_forwarded_for': job.reqHeaders.xForwardHeader }
+          });
 
           // call service
-          return client.get(job.url, function(err, req, res, obj) {
-            if(err) {
-              return cb(err.name + ': ' + err.body.message);
+          var userId = job.reqParams.username;
+          var password = job.reqParams.password;
+          $logger.info("Microservice caller URL (" + wf_const.ECX_CONTEXT + wf_const.ECX_LOGIN_PATH + ") for workflow {{methodDef.nickname}}");
+          return client.get(wf_const.ECX_CONTEXT + wf_const.ECX_LOGIN_PATH, {"username": userId, "password": password}, function(err, req, res, obj) {
+            if (err) {
+              $logger.error("Error occurred while calling the workflow {{methodDef.nickname}} with trace: --> " + err);
+              return cb(err);
             }
-
+            job.authHeader = res.headers['authorization'];
             job.result = obj;
+
             // callback message to track the workflow...
-            cb(null,'{{ methodDef.nickname }}: {{ methodDef.summary }}' + ': Workflow Succeeded...');
+            $logger.info("{{methodDef.nickname}} workflow executed successfully with response: " + obj);
+            cb(null,'{{ methodDef.nickname }}: Workflow Succeeded...');
           });
         } catch(ex) {
+          $logger.error("Error occurred inside {{methodDef.nickname}} workflow execution with trace: " + ex);
           console.log(ex);
         }
       },
       fallback: function (err, job, cb) {
         console.log(err);
-        job.result = '{{ methodDef.nickname }}: {{ methodDef.summary }}' + ': Workflow failed: ' + err;
+        job.result = '{{ methodDef.nickname }}: Workflow failed: ' + err;
+        $logger.error("Error occurred inside {{methodDef.nickname}} workflow execution with trace: " + err);
         cb("Error");
       }
     }
@@ -37,11 +49,12 @@ var {{ methodDef.nickname }} = {
      {
         name: 'Rollback',
         body: function (job, cb) {
+          $logger.error("Time out occurred while executing {{methodDef.nickname}} workflow");
           cb("Error");
         }
      }
   ]
-}
+};
 
 module.exports = {{ methodDef.nickname }};
 
