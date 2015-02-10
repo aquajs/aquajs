@@ -1,60 +1,60 @@
 var cwd = process.cwd();
+var aquaError = require('aquajs-error');
 
-var wfFactory = require('aquajs-wf-runner').Factory;  
-  // get factory object this is used to add jobs to backend
-
-var AquaWorkFlow = require('aquajs-wf-runner').AquaWorkFlow;
-  // get aqua workflow object, this is the key object
-  
-var wfConfig = require($dirPaths.configDir+'/workflow/config.json');  
-  // should match with worker configurations
-
-wfConfig.workflowsDirectory = $dirPaths.serverDir+"/workflows/{{ controllerName | replace('Controller', '') }}";
-
-var wf = new AquaWorkFlow(wfConfig,wfFactory);  
-  //create wf object and re-use everytime a request comes in
+//create wf object and reuse every time a request comes in
 
 var {{ controllerName }} = {
   {%- for apiMethod in apiMethods -%}
     {%- for operation in apiMethod.operations -%}
+      {{ operation.nickname }}: function (req, res, next) {
+        try {
+          var reqHeaders = {
+              xForwardHeader: req.header('http_x_forwarded_for')
+            };
 
-        {{ operation.nickname }}: function (req, res) {
-          try {
-              wf.startJob("{{ controllerName | replace('Controller', '') }}.{{ operation.nickname }}",{  body: req.body, params: req.params,
-			     headers: req.headers, query: req.query,url: req.url }
-              function(err, obj) {
-                // Workflow Completed
-
-                if (err || obj == "Error" || obj.execution != 'succeeded') {
-                    res.status(404).send(obj.result);
-                } else {
-                    res.header("Content-Type", "application/json; charset=utf-8");
-                    res.send(obj.result);
-                }
-              }, 
-              function(err, data) {
-                // Workflow failed
-                  if (err) {
-                      res.status(404).send('Not found');
-                  }
-                  else {
-                  }
-              });
-          }
-          catch(ex){
-              console.log(ex);
-          }
+          wf.startJob("{{controllerName | replace('Controller', '')}}.{{operation.nickname}}", {
+              reqParams: req.params,
+              bodyParams: req.body,
+              queryParams: req.query,
+              url: req.url,
+              reqHeaders: reqHeaders
+            },
+            function(err, obj) {
+              // Workflow Completed
+              $logger.info("Starting the workflow controller {{controllerName | replace('Controller', '')}}.{{operation.nickname}}");
+              if (err || obj == "Error" || obj.execution != 'succeeded') {
+                $logger.error("Error occurred while calling the workflow with trace: " + err);
+                next(new aquaError("samePrimarySecondaryService"));
+              } else {
+                res.header("Content-Type", "application/json; charset=utf-8");
+                res.header("Authorization", obj.authHeader);
+                $logger.info("workflow controller {{controllerName | replace('Controller', '')}}.{{operation.nickname}} executed successfully with result: " + obj.result);
+                res.send(obj.result);
+              }
+            },
+            function(err, data) {
+              // Workflow failed
+              if (err) {
+                $logger.error("Error occurred while calling workflow controller {{controllerName | replace('Controller', '')}}.{{operation.nickname}} with trace: " + err);
+                next(new aquaError("workflowNotFound"));
+              }
+            });
+        } catch (ex) {
+          $logger.error("error occurred while calling workflow controller {{controllerName | replace('Controller', '')}}.{{operation.nickname}} with trace: " + ex);
+          next(new aquaError("workflowMalFunction"));
         }
-        {%- if loop.length >1 and !loop.last -%}
-             ,
-        {%- endif -%}
+      }
+      {%- if loop.length >1 and !loop.last -%}
+           ,
+      {%- endif -%}
 
     {%- endfor -%}
     {%- if loop.length >1 and !loop.last -%}
          ,
     {%- endif -%}
   {%- endfor -%}
-}
+};
+
 module.exports = {{ controllerName }};
 
 
