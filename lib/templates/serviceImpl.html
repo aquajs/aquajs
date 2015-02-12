@@ -1,63 +1,6 @@
 var path = require('path');
 var connUtils = require('aquajs/lib/connUtils.js');
 
-var validateParams = function (req) {
-  var methodType = req.method;
-  var params = Object.keys(req.params);
-  var body = Object.keys(req.body);
-
-  if (params.length) {
-    params.forEach(function (param) {
-      req.checkParams(param, 'Invalid url param').isAlphanumeric();
-    });
-  }
-
-  var queryParams =  Object.keys(req.query);
-
-  if (queryParams.length){
-    queryParams.forEach(function (query) {
-      req.checkQuery(query, 'Invalid query param').isAlphanumeric();
-    });
-  }
-
-
-  {% for httpMethod in httpMethods -%}
-    if (methodType === "{{httpMethod}}") {
-      {%- for param in uniqueParams -%}
-        {%- for dataType in uniqueDataTypes -%}
-          {%- if param.dataType === dataType -%}
-            {%- if httpMethod !== "POST" -%}
-              {%- if dataType === 'string' -%}
-                req.checkParams('{{param.name}}', 'Invalid body params').notEmpty().isAlphanumeric();
-              {%- endif -%}
-              {%- if dataType === 'int' || dataType === 'integer' -%}
-                {%- if httpMethod === "GET" -%}
-                  req.checkParams('{{param.name}}').optional().isInt();
-                {%- else -%}
-                  req.checkParams('{{param.name}}', 'Invalid body params').notEmpty().isInt();
-                {%- endif -%}
-              {%- endif -%}
-              {%- if dataType === 'date' -%}
-                req.checkParams('{{param.name}}', 'Invalid body params').notEmpty().isDate();
-              {%- endif -%}
-              {%- if dataType === 'email' -%}
-                req.checkParams('{{param.name}}', 'Invalid body params').notEmpty().isEmail();
-              {%- endif -%}
-            {%- endif -%}
-            {%- if dataType === 'object' && httpMethod !== "GET" && httpMethod !== "DELETE" -%}
-              body.forEach(function (item) {
-                req.checkBody(item, 'Body must not be empty').notEmpty();
-              });
-            {%- endif -%}
-          {%- endif -%}
-        {%- endfor -%}
-      {%- endfor -%}
-    }
-  {%- endfor %}
-
-  return req.validationErrors();
-};
-
 var {{ serviceImplName }} = {
 
   {%- for apiMethod in apiMethods -%}
@@ -198,3 +141,61 @@ var {{ serviceImplName }} = {
 };
 
 module.exports = {{ serviceImplName }};
+
+//------
+
+var validateParams = function (req) {
+  var methodType = req.method;
+  var params = Object.keys(req.params);
+  var body = Object.keys(req.body);
+
+  if (params.length) {
+    params.forEach(function (param) {
+      req.checkParams(param, 'Invalid url param').isAlphanumeric();
+    });
+  }
+
+  var queryParams =  Object.keys(req.query);
+
+  if (queryParams.length){
+    queryParams.forEach(function (query) {
+      req.checkQuery(query, 'Invalid query param').isAlphanumeric();
+    });
+  }
+
+  {% for httpMethod in httpMethods -%}
+    if (methodType === "{{httpMethod}}") {
+      {%- for param in uniqueParams -%}
+        {%- for dataType in uniqueDataTypes -%}
+          {%- if param.dataType === dataType -%}
+            {%- if httpMethod !== "POST" -%}
+              {%- if dataType === 'string' -%}
+                req.checkParams('{{param.name}}', 'Invalid body params').notEmpty().isAlphanumeric();
+              {%- endif -%}
+              {%- if dataType === 'int' || dataType === 'integer' -%}
+                {%- if httpMethod === "GET" -%}
+                  req.checkParams('{{param.name}}').optional().isInt();
+                {%- else -%}
+                  req.checkParams('{{param.name}}', 'Invalid body params').notEmpty().isInt();
+                {%- endif -%}
+              {%- endif -%}
+              {%- if dataType === 'date' -%}
+                req.checkParams('{{param.name}}', 'Invalid body params').notEmpty().isDate();
+              {%- endif -%}
+              {%- if dataType === 'email' -%}
+                req.checkParams('{{param.name}}', 'Invalid body params').notEmpty().isEmail();
+              {%- endif -%}
+            {%- endif -%}
+            {%- if dataType === 'object' && httpMethod !== "GET" && httpMethod !== "DELETE" -%}
+              body.forEach(function (item) {
+                req.checkBody(item, 'Body must not be empty').notEmpty();
+              });
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    }
+  {%- endfor %}
+
+  return req.validationErrors();
+};
