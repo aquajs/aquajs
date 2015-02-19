@@ -25,7 +25,6 @@
     "express-validator": "^2.7.0",
     "js-beautify": "^1.5.4",
     "method-override": "^2.3.0",
-    "monitor": "^0.6.10",
     "persist": "latest",
     "rekuire": "^0.1.9",
     "swagger-express": "^1.0.5",
