@@ -1,5 +1,4 @@
 /**
- * Created by etuscano on 7/29/14.
  * Controllers for workflow
  * workflow controller which called by worker and passes the call to the
  * corresponding workflow and sends back the orchestrated data from multiple microservices
