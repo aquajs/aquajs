@@ -17,8 +17,14 @@ var {{methodDef.nickname}} = {
       var client = restify.createJsonClient({
         url: wf_utils.getHostUrl(job.wf_host_port_list, wf_const.PROJECT),headers :job.reqHeaders, requestTimeout: requestTimeout, retry: retry
       });
-
-      return client.del(job.reqUrl, function (err, req, res, obj) {
+      {%- if methodDef.httpMethod === 'DELETE'-%}
+        {%- set methodDef.httpMethod = 'DEL' -%}
+      {%- endif -%}
+    {%- if methodDef.httpMethod === 'POST' || methodDef.httpMethod === 'PUT' -%}
+      return client.{{methodDef.httpMethod|lower}}(job.reqUrl, job.bodyParams, function (err, req, res, obj) {
+    {%- else -%}
+      return client.{{methodDef.httpMethod|lower}}(job.reqUrl, function (err, req, res, obj) {
+    {%- endif -%}
         // Call the Microservice and act on the response...
         var data = {};
         if (err) {
@@ -41,4 +47,4 @@ var {{methodDef.nickname}} = {
   }
 };
 
-module.exports = deleteVc;
+module.exports = {{methodDef.nickname}};

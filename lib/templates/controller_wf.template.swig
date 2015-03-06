@@ -11,7 +11,7 @@ var cwd = process.cwd(),
   path = require('path'),
   aquaJsError = require('aquajs-error');
 
-var wf_dir = path.join($dirPaths.serverDir, 'workflows', {{basename}}),
+var wf_dir = path.join($dirPaths.serverDir, 'workflows', '{{controller}}'),
   wf_utils = require(path.join($dirPaths.serverDir, 'utils', 'wf_utils'));
 
 var BaseController = {

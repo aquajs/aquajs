@@ -1,33 +1,12 @@
 var path = require('path');
+var {{ controllerName }} = require( path.join($dirPaths.controllersDir,'{{ controllerName }}'));
 
-/*####################################
- Workflow routes to forward to universal base controller based on the route method
- ####################################*/
-
-var baseRoute = function(app) {
-  $wf_const = require(path.join($dirPaths.serverDir,'constants','wf_constants'));
-
-  //initialize the base controller here
-  var baseController = require(path.join($dirPaths.controllersDir, 'baseController'));
-
-  app.all('*',  function (req, res,next) {
-    switch(req.method) {
-      case "GET":
-        baseController.getWorkflow(req,res,next);
-        break;
-      case "POST":
-        baseController.postWorkflow(req,res,next);
-        break;
-      case "PUT":
-        baseController.putWorkflow(req,res,next);
-        break;
-      case "PATCH":
-        baseController.patchWorkflow(req,res,next);
-        break;
-      case "DELETE":
-        baseController.deleteWorkflow(req,res,next);
-        break;
-    }
-  });
+var {{ routerName }} = function(app){
+  {%- for apiMethod in apiMethods -%}
+    {%- for operation in apiMethod.operations -%}
+        app.{{operation.httpMethod|lower}}('{{ apiMethod.path }}',  {{ controllerName }}.{{ operation.nickname }});
+    {%- endfor -%}
+  {%- endfor -%}
 };
-module.exports = baseRoute;
+
+module.exports = {{ routerName }};
