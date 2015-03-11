@@ -12,6 +12,9 @@ exports.samplePost = {
       {%- set postValue = 1 -%}
     {%- endif -%}
     '{{property.name}}': '{{postValue}}'
+    {%- if loop.length >1 and !loop.last -%}
+      ,
+    {%- endif -%}
   {%- endfor -%}
 }
 
@@ -28,5 +31,8 @@ exports.samplePut = {
       {%- set putValue = 1 -%}
     {%- endif -%}
     '{{property.name}}': '{{putValue}}'
+    {%- if loop.length >1 and !loop.last -%}
+      ,
+    {%- endif -%}
   {%- endfor -%}
 }
