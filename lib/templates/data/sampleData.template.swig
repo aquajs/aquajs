@@ -6,7 +6,7 @@ exports.samplePost = {
     {%- elseif property.type === 'string' -%}
       {%- set postValue = 'sampleString' -%}
     {%- elseif property.type === 'object' -%}
-      {%- set postValue = '{key: value}' -%}
+      {%- set postValue = '{sampleProperty: sampleValue}' -%}
     {%- endif -%}
     {%- if property.name === 'id' -%}
       {%- set postValue = 1 -%}
@@ -22,7 +22,7 @@ exports.samplePut = {
     {%- elseif property.type === 'string' -%}
       {%- set putValue = 'UpdatedsampleString' -%}
     {%- elseif property.type === 'object' -%}
-      {%- set putValue = '{key: Updatedvalue}' -%}
+      {%- set putValue = '{sampleProperty: Updatedvalue}' -%}
     {%- endif -%}
     {%- if property.name === 'id' -%}
       {%- set putValue = 1 -%}
