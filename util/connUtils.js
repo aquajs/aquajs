@@ -38,7 +38,7 @@ var nodeUtilities = {
 
     var eachModel, orm;
 
-    if (orm === undefined && enableWaterline) {
+    if (orm && enableWaterline) {
       orm = new Waterline();
     }
     async.each(dbConfList, function (eachConfig, callback) {
@@ -85,7 +85,6 @@ var nodeUtilities = {
               if (err) {
                 console.log("oracle connection could not be established");
               }
-              console.log(conn)
               $conn = conn;
               $initModel = true;
             });
