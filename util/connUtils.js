@@ -1,11 +1,12 @@
 var express = require('express'),
-  Waterline = require('waterline'),
-  fs = require('fs'),
-  path = require('path'),
-  async = require("async"),
-  persist = require('persist');
+    Waterline = require('waterline'),
+    fs = require('fs'),
+    path = require('path'),
+    async = require("async"),
+    persist = require('persist');
+    require('./globalConfig');
 
-GLOBAL.$initModel = false;
+   $initModel = false;
 
 var nodeUtilities = {
 
@@ -22,7 +23,7 @@ var nodeUtilities = {
                   if (err) {
                     console.log("oracle connection could not be established");
                   }
-                  GLOBAL.$conn = conn;
+                  $conn = conn;
                   $initModel = true;
                 });
               }
@@ -33,9 +34,10 @@ var nodeUtilities = {
     }
   },
 
-  initORM: function (enableWaterline, enablePersist, dbConfList, app) {
+  initORM: function (dbConfList, app) {
 
     var eachModel, orm;
+
     if (orm === undefined && enableWaterline) {
       orm = new Waterline();
     }
@@ -71,7 +73,7 @@ var nodeUtilities = {
                 $app.connections.mongo.config.auto_reconnect = true;
               } catch (e) {
                 console.log("error: ensure adapter is running before starting microservice");
-				process.exit(1);
+                process.exit(1);
               }
 
             });
@@ -83,7 +85,8 @@ var nodeUtilities = {
               if (err) {
                 console.log("oracle connection could not be established");
               }
-              GLOBAL.$conn = conn;
+              console.log(conn)
+              $conn = conn;
               $initModel = true;
             });
           }
@@ -92,7 +95,7 @@ var nodeUtilities = {
 
     }, function (err) {
       if (err) {
-        AquaJsLogger.getLogger().error(err);
+        $logger.error(err);
       }
     });
   }
