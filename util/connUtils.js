@@ -17,7 +17,7 @@ var nodeUtilities = {
           if (err) {
             console.log("Persist connection not available");
             //re-connecting persist
-            if (enablePersist) {
+            if ($enablePersist) {
               if (eachConfig["driver"] !== undefined) {
                 persist.connect(eachConfig, function (err, conn) {
                   if (err) {
@@ -38,7 +38,7 @@ var nodeUtilities = {
 
     var eachModel, orm;
 
-    if (orm && enableWaterline) {
+    if (orm && $enableWaterline) {
       orm = new Waterline();
     }
     async.each(dbConfList, function (eachConfig, callback) {
@@ -57,13 +57,13 @@ var nodeUtilities = {
           }
         }
 
-        if ((enableWaterline || enablePersist) && eachModel.prototype !== undefined && eachModel.prototype.adapter !== undefined) {
+        if (($enableWaterline || $enablePersist) && eachModel.prototype !== undefined && eachModel.prototype.adapter !== undefined) {
           orm.loadCollection(eachModel);
         }
         callback();
       }, function (err) {
 
-        if (enableWaterline) {
+        if ($enableWaterline) {
           if (eachConfig["adapters"] !== undefined) {
             orm.initialize(eachConfig, function (err, models) {
               try {
@@ -79,7 +79,7 @@ var nodeUtilities = {
             });
           }
         }
-        if (enablePersist) {
+        if ($enablePersist) {
           if (eachConfig["driver"] !== undefined) {
             persist.connect(eachConfig, function (err, conn) {
               if (err) {

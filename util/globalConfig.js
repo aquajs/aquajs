@@ -8,8 +8,8 @@ GLOBAL.$logger;// instantiated in bootstrap and used across the application .= A
 GLOBAL.$winston;// instantiated in bootstrap= AquaJsLogger.getWinston();
 
 //enableWaterline,enablePersist are used  in bootstrap and conn Utils
-GLOBAL.enableWaterline;
-GLOBAL.enablePersist;
+GLOBAL.$enableWaterline;
+GLOBAL.$enablePersist;
 GLOBAL.$appId = "[aquajs-logger]";
 
 //$initModel ,$conn used in connUtils
