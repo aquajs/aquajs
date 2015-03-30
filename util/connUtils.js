@@ -4,7 +4,7 @@ var express = require('express'),
     path = require('path'),
     async = require("async"),
     persist = require('persist');
-    require('./globalConfig');
+    require(path.join('.','..','constants','globalConstants'));
 
    $initModel = false;
 
@@ -38,7 +38,7 @@ var nodeUtilities = {
 
     var eachModel, orm;
 
-    if (orm && $enableWaterline) {
+    if (orm === undefined && $enableWaterline) {
       orm = new Waterline();
     }
     async.each(dbConfList, function (eachConfig, callback) {
