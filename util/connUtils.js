@@ -4,7 +4,7 @@ var express = require('express'),
     path = require('path'),
     async = require("async"),
     persist = require('persist');
-    require(path.join('.','..','constants','globalConstants'));
+    require(path.join('.','..','constants','GlobalConstants'));
 
    $initModel = false;
 
