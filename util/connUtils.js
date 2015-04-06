@@ -60,7 +60,7 @@ var nodeUtilities = {
 
         if (($enableWaterline || $enablePersist) && eachModel.prototype !== undefined && eachModel.prototype.adapter !== undefined) {
           orm.loadCollection(eachModel);
-          GLOBAL $adaptor = (eachModel.prototype.adapter);
+          GLOBAL.$adaptor = (eachModel.prototype.adapter);
         }
         callback();
       }, function (err) {
