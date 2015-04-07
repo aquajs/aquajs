@@ -34,14 +34,15 @@ var nodeUtilities = {
     }
   },
 
-  initORM: function (dbConfList, app) {
+  initORM: function (connectionConfig, app) {
 
     var eachModel, orm;
 
     if (orm === undefined && $enableWaterline) {
       orm = new Waterline();
     }
-    async.each(dbConfList, function (eachConfig, callback) {
+    async.each(Object.keys(connectionConfig), function (eachConfig, callback) {
+      var configObject = connectionConfig[eachConfig]
       var models_path = path.join($dirPaths.serverDir, 'models');
       var modelList = fs.readdirSync(models_path);
 
@@ -59,20 +60,21 @@ var nodeUtilities = {
 
         if (($enableWaterline || $enablePersist) && eachModel.prototype !== undefined && eachModel.prototype.adapter !== undefined) {
           orm.loadCollection(eachModel);
+          GLOBAL.$adaptor = (eachModel.prototype.adapter);
         }
         callback();
       }, function (err) {
 
         if ($enableWaterline) {
-          if (eachConfig["adapters"] !== undefined) {
-            orm.initialize(eachConfig, function (err, models) {
+          if (configObject.adapters !== undefined) {
+            orm.initialize(configObject, function (err, models) {
               try {
                 $app.models = models.collections;
                 $app.connections = models.connections;
                 $initModel = true;
                 $app.connections.mongo.config.auto_reconnect = true;
               } catch (e) {
-                console.log("error: ensure adapter is running before starting microservice");
+                console.log("error:" +"ensure" +" "+ $adaptor +" " +"adapter is running before starting microservice");
                 process.exit(1);
               }
 
@@ -80,8 +82,8 @@ var nodeUtilities = {
           }
         }
         if ($enablePersist) {
-          if (eachConfig["driver"] !== undefined) {
-            persist.connect(eachConfig, function (err, conn) {
+          if (configObject.driver !== undefined) {
+            persist.connect(configObject, function (err, conn) {
               if (err) {
                 console.log("oracle connection could not be established");
               }
