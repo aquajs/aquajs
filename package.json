@@ -1,7 +1,7 @@
 {
   "name": "aquajs",
   "description": "Aqua.js Microservice Framework",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "main": "./lib",
   "repository": {
     "type": "git",
