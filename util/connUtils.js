@@ -74,7 +74,7 @@ var nodeUtilities = {
                 $initModel = true;
                 $app.connections.mongo.config.auto_reconnect = true;
               } catch (e) {
-                console.log("error:" +"ensure" +" "+ $adaptor +" " +"adapter is running before starting microservice");
+                console.log("error:" +" microservice stopped running. please ensure" +" "+ $adaptor +" " +"adapter is running before starting microservice");
                 process.exit(1);
               }
 
