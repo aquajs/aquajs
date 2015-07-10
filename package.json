@@ -11,7 +11,7 @@
     "aqua api microservice"
   ],
   "license": "ISC",
-  "dependencies": {
+  "dependencies":  {
     "aquajs-error": "latest",
     "aquajs-logger": "latest",
     "aquajs-mailer": "latest",
