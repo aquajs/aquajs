@@ -12,7 +12,7 @@
   ],
   "license": "ISC",
   "dependencies":  {
-    "aquajs-error": "latest",
+    "aquajs-error": "0.2.16",
     "aquajs-logger": "latest",
     "aquajs-mailer": "latest",
     "aquajs-precog": "latest",
