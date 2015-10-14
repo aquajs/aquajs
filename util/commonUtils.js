@@ -11,7 +11,7 @@ module.exports = {
     getStackTrace : function (err) {
         return {
             date:    new Date().toString(),
-            stack:    err && err.stack.split('\n')
+            stack:    err && err.stack && err.stack.split('\n')
         };
     },
 
