@@ -35,6 +35,7 @@
     "cron-parser": "0.6.1",
     "express": "4.10.5",
     "express-validator": "2.7.0",
+    "helmet": "^2.1.0",
     "js-beautify": "1.5.4",
     "method-override": "2.3.0",
     "persist": "0.2.7",
