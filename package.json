@@ -1,7 +1,7 @@
 {
   "name": "aquajs",
   "description": "Aqua.js Microservice Framework",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "./lib",
   "repository": {
     "type": "git",
@@ -43,6 +43,7 @@
     "uhura": "0.1.2",
     "uuid": "2.0.1",
     "json-stringify-safe":"5.0.1",
+    "lodash": "3.10.0",
     "waterline": "0.10.14"
   },
   "devDependencies": {
