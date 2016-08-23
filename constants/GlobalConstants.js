@@ -1,7 +1,10 @@
-var path = require('path');
-
-//$dirPaths,$config,$app are used in bootstrap
-GLOBAL.$dirPaths = require(path.join(process.cwd(), 'config', 'dirPaths'));
+var fs = require('fs'),
+    path = require('path'),
+    dirPathLoc = process.env.DIR_EXPORTS_PATH ||  path.join(process.cwd(), 'config' ) ,
+    dirFilePathLoc = path.join(dirPathLoc,'dirPaths.js');
+     if (fs.existsSync(dirFilePathLoc) ) {
+          GLOBAL.$dirPaths = require(dirFilePathLoc);
+    };
 GLOBAL.$config = {};
 GLOBAL.$app = {};//Used in bootstrap and connUtils
 GLOBAL.$logger = {} ;// instantiated in bootstrap and used across the application .= AquaJsLogger.getLogger();

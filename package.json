@@ -1,11 +1,11 @@
 {
   "name": "aquajs",
   "description": "Aqua.js Microservice Framework",
-  "version": "1.0.5",
+  "version": "1.0.9",
   "main": "./lib",
   "repository": {
     "type": "git",
-    "url": "git://github.com:aquajs/aquajs.git"
+    "url": "git://github.com/%3Aaquajs/aquajs.git"
   },
   "keywords": [
     "aqua api microservice"
@@ -21,9 +21,9 @@
     "Namratha Ambekar <nambekar@equinix.com>"
   ],
   "license": "ISC",
-  "dependencies":  {
+  "dependencies": {
     "aquajs-error": "1.0.2",
-    "aquajs-logger": "1.2.2",
+    "aquajs-logger": "1.2.7",
     "aquajs-mailer": "1.0.2",
     "aquajs-precog": "1.0.1",
     "aquajs-scheduler": "1.0.3",
@@ -42,7 +42,7 @@
     "swagger-express": "1.0.5",
     "uhura": "0.1.2",
     "uuid": "2.0.1",
-    "json-stringify-safe":"5.0.1",
+    "json-stringify-safe": "5.0.1",
     "lodash": "3.10.0",
     "waterline": "0.10.14"
   },
@@ -51,5 +51,33 @@
   },
   "publishConfig": {
     "registry": "http://nexus.corp.equinix.com/nexus/content/repositories/Equinix-AquaJS-Release/"
-  }
+  },
+  "readme": "aquajs\n====================================\nThe Friendly & Fun Javascript Fullstack Framework for your next API/Web/Mobile/IOT/Wearables application.\nIt is designed to give you a quick and organized way to start developing an application. We mainly try to take care of the connection points between existing popular frameworks and solve common integration problems.\n\n## Key drivers:\n\n   * Enables developers to focus on writing reusable application logic instead of spending time building infrastructure;\n   * It is designed to give a quick and organized way to start developing  Applications/Services;\n   * We mainly try to take care of the connection points between existing popular module/frameworks and solve common integration problems;\n   * AquaJS is a secure and scalable layer that extends express by providing structure and convention.\n\n## Prerequisites:\n\n Node.js - Download and Install Node.js. You can also follow this gist for a quick and easy way to install Node.js and npm.\n \n## Info:\n\n[Using the built-in performance monitor](https://github.com/aquajs/aquajs/wiki/Using-aquajs-performance-monitor)\n\n\n                            Designed with ❤ and care by Emerging Software & Platforms Team\n",
+  "readmeFilename": "README.md",
+  "gitHead": "0cb8bc61b69d414b31e1dcf5f1962850b904e03f",
+  "bugs": {
+    "url": "https://github.com/%3Aaquajs/aquajs/issues"
+  },
+  "homepage": "https://github.com/%3Aaquajs/aquajs#readme",
+  "_id": "aquajs@1.0.9",
+  "scripts": {},
+  "_shasum": "a904bd8b7ec789e43a3b5881f71bb65011a95e83",
+  "_from": "aquajs@1.0.9",
+  "_npmVersion": "2.14.12",
+  "_nodeVersion": "4.2.6",
+  "_npmUser": {
+    "name": "aatibudhi",
+    "email": "aatibudhi@equinix.com"
+  },
+  "maintainers": [
+    {
+      "name": "aatibudhi",
+      "email": "aatibudhi@equinix.com"
+    }
+  ],
+  "dist": {
+    "shasum": "a904bd8b7ec789e43a3b5881f71bb65011a95e83",
+    "tarball": "http://nexus.corp.equinix.com/nexus/content/groups/Equinix-NPM-Release/aquajs/-/aquajs-1.0.9.tgz"
+  },
+  "_resolved": "http://nexus.corp.equinix.com/nexus/content/groups/Equinix-NPM-Release/aquajs/-/aquajs-1.0.9.tgz"
 }
