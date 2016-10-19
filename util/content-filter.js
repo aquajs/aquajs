@@ -48,10 +48,10 @@ module.exports = function hackerMate(options) {
 				if (found) {
 					return res.status(403).send(bodyMessage + found);
 				}
-				next();
+				return next();
 			});
 		} else {
-			next();
+			return next();
 		}
 	};
 };
@@ -69,7 +69,7 @@ function convertJSONString(json, typeList, checkNames, callback) {
 		for (var i = 0; i < keys.length; i++) {
 			if (typeList.indexOf(typeof data[keys[i]]) !== -1) {
 				//null is an object too. So check the value `data[keys[i]]`
-				if (typeof data[keys[i]] === 'object' && data[keys[i]]) {
+				if (typeof data[keys[i]] === 'object' && data[keys[i]] && data[keys[i]].length > 0) {
 					if (checkNames) {
 						// if the object is an array get the elements
 						if (data[keys[i]].length) {
