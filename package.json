@@ -1,7 +1,7 @@
 {
   "name": "aquajs",
   "description": "Aqua.js Microservice Framework",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "main": "./lib",
   "repository": {
     "type": "git",
@@ -21,9 +21,9 @@
     "Namratha Ambekar <nambekar@equinix.com>"
   ],
   "license": "ISC",
-  "dependencies":  {
+  "dependencies": {
     "aquajs-error": "1.0.2",
-    "aquajs-logger": "1.2.2",
+    "aquajs-logger": "1.2.7",
     "aquajs-mailer": "1.0.2",
     "aquajs-precog": "1.0.1",
     "aquajs-scheduler": "1.0.3",
@@ -42,7 +42,7 @@
     "swagger-express": "1.0.5",
     "uhura": "0.1.2",
     "uuid": "2.0.1",
-    "json-stringify-safe":"5.0.1",
+    "json-stringify-safe": "5.0.1",
     "lodash": "3.10.0",
     "waterline": "0.10.14"
   },
